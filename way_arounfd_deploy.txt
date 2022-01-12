@@ -1,3 +1,4 @@
+
 package com.jbpm.executor;
 
 import java.util.Calendar;
@@ -85,4 +86,20 @@ e.printStackTrace();
 logger.info("Scheduled Interval is :"+ calendar.getTime());
 return calendar.getTime();
 }
+}
+
+
+
+
+public class SampleCommand  implements Command, Reoccurring {
+  public ExecutionResults execute(CommandContext ctx) throws Exception {
+    log.info("Sample command executed");
+    return new ExecutionResults();
+  }
+
+  public Date getScheduleTime() {
+    LocalDateTime nextOccurrence = LocalDateTime.now().plusSeconds(30);
+    log.info("Sample command next occurrence on {}", nextOccurrence);
+    return Date.from(nextOccurrence.atZone(ZoneId.systemDefault()).toInstant());
+  }
 }
