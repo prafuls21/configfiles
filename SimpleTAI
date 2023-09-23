@@ -1,0 +1,108 @@
+package com.ibm.websphere.security.sample;
+
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.security.auth.Subject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.ibm.websphere.security.WebTrustAssociationException;
+import com.ibm.websphere.security.WebTrustAssociationFailedException;
+import com.ibm.wsspi.security.tai.TAIResult;
+import com.ibm.wsspi.security.tai.TrustAssociationInterceptor;
+
+public class SimpleTAI implements TrustAssociationInterceptor {
+   String defaultTaiUser = "";    
+   public SimpleTAI() {
+      super();
+   }
+/*
+ * @see com.ibm.wsspi.security.tai.TrustAssociationInterceptor#isTargetInterceptor
+ * (javax.servlet.http.HttpServletRequest)
+ */
+   public boolean isTargetInterceptor(HttpServletRequest req)
+                  throws WebTrustAssociationException {
+      //Add logic to determine whether to intercept this request
+      return true;
+   }
+/*
+ * @see com.ibm.wsspi.security.tai.TrustAssociationInterceptor#negotiateValidateandEstablishTrust
+ * (javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+ */
+   public TAIResult negotiateValidateandEstablishTrust(HttpServletRequest req,
+                    HttpServletResponse resp) throws WebTrustAssociationFailedException {
+           // Add logic to authenticate a request, and return a TAI result.
+        // For example: extract the user ID from request and validate it with the user registry.
+        // The user extracted from the request must exist in the shared user registry of the IBM BPM server and Process Federation Server
+        Cookie[] cookieList = req.getCookies();
+        for(int i=0; cookieList!=null && i<cookieList.length; i++){
+            System.out.println("getCookies: " + cookieList[i].getName());
+            System.out.println("getCookies Value: " + cookieList[i].getValue());
+        }
+        if(req.getUserPrincipal()!=null){
+            System.out.println("getUserPrincipal: " + req.getUserPrincipal().getName());
+        }
+        String taiUser = "YOUR LOGIC TO GET USER ID";        
+        if(taiUser==null || taiUser.length()==0){
+            taiUser = defaultTaiUser;
+        }
+        Subject subject = null;
+        subject = createSubject(taiUser, "uid=" + taiUser + ",ou=stress,o=ibm,c=us");
+        return TAIResult.create(HttpServletResponse.SC_OK, taiUser, subject);
+ }
+   
+   private Subject createSubject(String userid, String uniqueid) {
+        Subject subject = new Subject();
+        Hashtable hashtable = new Hashtable();
+        hashtable.put("com.ibm.wsspi.security.cred.uniqueId", uniqueid);
+        hashtable.put("com.ibm.wsspi.security.cred.securityName", userid);
+
+        subject.getPublicCredentials().add(hashtable);
+
+        return subject;
+      }
+
+/*
+ * @see com.ibm.wsspi.security.tai.TrustAssociationInterceptor#initialize(java.util.Properties)
+ */
+    public int initialize(Properties arg0)
+                    throws WebTrustAssociationFailedException {
+        Set keys = arg0.keySet();
+        if(keys!=null){
+        Iterator<String> iter = keys.iterator();
+        while(iter.hasNext()){
+            String key = iter.next();
+            if(key != null)
+                System.out.println("TAI Property: " + key + " : " + arg0.getProperty(key));
+                if(key.equals("defaultUser")){
+                    defaultTaiUser = arg0.getProperty(key);
+                }
+        }
+        }
+        return 0;
+    }
+
+/*
+ * @see com.ibm.wsspi.security.tai.TrustAssociationInterceptor#getVersion()
+ */
+    public String getVersion() {
+        return "1.0";
+    }
+
+/*
+ * @see com.ibm.wsspi.security.tai.TrustAssociationInterceptor#getType()
+ */
+    public String getType() {
+        return this.getClass().getName();
+    }
+/*
+ * @see com.ibm.wsspi.security.tai.TrustAssociationInterceptor#cleanup()
+ */
+    public void cleanup()
+
+    {}
+}
