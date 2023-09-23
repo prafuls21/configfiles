@@ -1,0 +1,71 @@
+import java.util.Properties;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.ibm.websphere.security.WebTrustAssociationException;
+import com.ibm.websphere.security.WebTrustAssociationFailedException;
+import com.ibm.wsspi.security.tai.TAIResult;
+import com.ibm.wsspi.security.tai.TrustAssociationInterceptor;
+
+public class ExampleTAI implements TrustAssociationInterceptor {
+   // declarations
+   private String cookie = null;
+
+   @Override
+   public void cleanup() {
+   }
+
+   @Override
+   public String getType() {
+      return String.format("Example TAI %s", this.getVersion());
+   }
+
+   @Override
+   public String getVersion() {
+      return "1.0";
+   }
+
+   @Override
+   public int initialize(Properties props)
+      throws WebTrustAssociationFailedException {
+      System.out.println("ExampleTAI.initialize()");
+
+      // read properties from configuration in WAS
+      this.cookie = props.getProperty("cookieName");
+
+      // return 0 to indicate success
+      return 0;
+   }
+
+   @Override
+   public boolean isTargetInterceptor(
+      HttpServletRequest req)
+      throws WebTrustAssociationException {
+      System.out.println("ExampleTAI.isTargetInterceptor()");
+      for (Cookie c : req.getCookies()) {
+         if (c.getName().equals(this.cookie)) return true;
+      }
+      return false;
+   }
+
+   @Override
+   public TAIResult negotiateValidateandEstablishTrust(
+      HttpServletRequest req,
+      HttpServletResponse res)
+      throws WebTrustAssociationFailedException {
+      System.out.println("ExampleTAI.negotiate...()");
+      for (Cookie c : req.getCookies()) {
+         if (c.getName().equals(this.cookie)) {
+            // send 200 to signal we're okay
+            return TAIResult.create(HttpServletResponse.SC_OK,
+                c.getValue());
+         }
+      }
+
+      // not authenticated
+      return TAIResult.create(HttpServletResponse.SC_UNAUTHORIZED);
+   }
+
+}
