@@ -1,0 +1,74 @@
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.ibm.websphere.security.WebTrustAssociationException;
+import com.ibm.websphere.security.WebTrustAssociationFailedException;
+import com.ibm.wsspi.security.tai.TAIResult;
+import com.ibm.wsspi.security.tai.TrustAssociationInterceptor;
+
+// This custom TAI intercepts any inbound HTTP request that
+// includes a custom header.  The default for the custom header name is 
+// CUSTOM_HEADER.  The user name is the value for the custom header.
+// The custom header name can be customized with a TAI property 
+// called headerName.
+// https://www.ibm.com/docs/en/was-nd/9.0.5?topic=infrastructure-developing-custom-tai
+//Compile the implementation after you implement it.
+//For example, app_server_root/java/bin/javac -classpath install_root/dev/was_public.jar;install_root/dev/javax.j2ee.servlet.jar
+public class myTAIImpl implements TrustAssociationInterceptor {
+
+    private static String _headerName = "CUSTOM_HEADER";
+
+    public myTAIImpl () {}
+
+    public int initialize(Properties props) throws WebTrustAssociationFailedException {
+        //initialize the implementation. If successful return 0, else return 1.
+        if (props!=null) {
+            String value = props.getProperty("headerName");
+            if (value!=null && value.length()!=0) {
+                _headerName = value;
+            }
+        }
+        return 0;
+    }
+    public boolean isTargetInterceptor(HttpServletRequest req) throws WebTrustAssociationException {
+        // use attributes of the HTTP request to determine if you want your interceptor 
+        // to handle the request
+        // return true if this is the target interceptor, else return false.
+        // 
+        if (req!=null && req.getHeader(_headerName) != null) {
+            return true;
+        }
+        return false;
+    }
+    public TAIResult negotiateValidateandEstablishTrust(HttpServletRequest req, HttpServletResponse resp)
+    throws WebTrustAssociationFailedException {
+        //validate the request and establish trust.
+        //create and return a TAIResult object
+
+        Enumeration<String> headers = req.getHeaders(_headerName);      
+        if (Collections.list(headers).size() > 1) {
+            throw new WebTrustAssociationFailedException("Too many "+_headerName+" headers");
+        }
+        String username = req.getHeader(_headerName);
+        // now you can either do extra processing to validate the user or transform the value
+        // to something that is more friendly to the current registry
+
+        TAIResult taiResult = TAIResult.create(HttpServletResponse.SC_OK, username);
+        return taiResult;
+    }
+    public String getVersion() {
+        //Return a version specific to your implementation
+        return "1.0";
+    }
+    public String getType() {
+        //Return a type specific to your implementation
+        return "my custom TAI";
+    }
+    public void cleanup() {
+        //Cleanup code specific to your implementation
+    }
+}
