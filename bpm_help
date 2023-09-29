@@ -276,3 +276,78 @@ sg248355.pdf Deliver Modern UI for IBM BPM with the Coach Framework and Other Ap
 
 
 Soap UI settings set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.https.protocols="SSLv3,TLSv1.2"
+
+
+
+ve problems
+
+What are you looking for
+Home
+About Me
+Hot Topics
+Contact
+Privacy Policy
+News
+All Posts
+Core Java
+Spring Boot
+Cloud Foundry
+Node JS
+Containers
+More
+Writer's picture
+Dibyojyoti Sanyal
+Sep 15, 2021
+1 min read
+
+Print request and response headers using HttpServletRequest and HTTPServletResponse
+Often in JAVA we need to troubleshoot  the incoming requests, outgoing requests , incoming responses and outgoing responses. This is a typical situation for cloud native developments where an application or micro service is developed. One of the main troubleshooting steps is to print the request and response headers. Today I am going to show how to print those request and response headers for a JAVA application.
+
+
+ 
+Contents
+
+Printing request headers using HttpServletRequest object 
+
+Printing response headers using HttpServletResponse object 
+
+ 
+Printing request headers using HttpServletRequest object
+After you have received a request you can use this method to print all headers.
+
+public void printRequestHeaders(HttpServletRequest req) {
+  Enumeration names = req.getHeaderNames();
+  if(names == null) {
+    return;
+  }
+    while(names.hasMoreElements()) {
+      String name = (String) names.nextElement();
+       Enumeration values = req.getHerders(name);
+       if(values != null) {
+         while(values.hasMoreElements()) {
+             String value = (String) values.nextElement();
+             System.out.println(name + " : " + value );
+         }
+       }
+    }
+}
+
+
+public void printResponseHeaders(HttpServletResponse req) {
+  Collection<String> names = res.getHeaderNames();
+  if(names == null) {
+    return;
+  }
+  Iterator namesIterator = names.iterator();
+  while(namesIterator.hasNext()) {
+   String name = (String)  namesIterator.next();
+    Collection<String> values = res.getHeaders(name);
+    if(values != null) {
+       Iterator valuesIterator = values.iterator();
+       while(valuesIterator.hasNext()) {
+            String value = (String) valuesIterator.next();
+            System.out.println(name + " : " + value );         
+       }
+    }
+  }
+}
