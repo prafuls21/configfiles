@@ -1,0 +1,93 @@
+PS C:\tmp\git-practice\configfiles> git checkout --orphan new-branch-test2
+Switched to a new branch 'new-branch-test2'
+PS C:\tmp\git-practice\configfiles> git add .
+PS C:\tmp\git-practice\configfiles> git status
+On branch new-branch-test2
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   About Me_Praful_1.pptx
+        new file:   About Me_Praful_2.pptx
+        new file:   About Me_Praful_3.pptx
+        new file:   About_project
+        new file:   BPM_POI_Oct30.zip
+        new file:   ExampleTAI
+        new file:   Facebook Project- Lysosomes.ppt
+        new file:   JBPM workflow development company _ DeltaFixes Technologies.html
+        new file:   JSON-Viewer-master.zip
+        new file:   New Text Document.txt
+        new file:   SimpleTAI
+        new file:   bpm_help
+        new file:   bpm_spark_js.js
+        new file:   business-application-service (2).zip
+        new file:   business-application-service-gradle.zip
+        new file:   business-application-service715.zip
+        new file:   chattest.txt
+        new file:   mongo-db-demo.zip
+        new file:   myTAIImpl
+        new file:   script_create_715.sql
+        new file:   sg248210.epub
+        new file:   single_jar_file_instructions.txt
+        new file:   straight_photo.jpg
+        new file:   way_arounfd_deploy.txt
+
+PS C:\tmp\git-practice\configfiles> git commit -m "tesrt"
+[new-branch-test2 (root-commit) 94236d8] tesrt
+ 24 files changed, 2340 insertions(+)
+ create mode 100644 About Me_Praful_1.pptx
+ create mode 100644 About Me_Praful_2.pptx
+ create mode 100644 About Me_Praful_3.pptx
+ create mode 100644 About_project
+ create mode 100644 BPM_POI_Oct30.zip
+ create mode 100644 ExampleTAI
+ create mode 100644 Facebook Project- Lysosomes.ppt
+ create mode 100644 JBPM workflow development company _ DeltaFixes Technologies.html
+ create mode 100644 JSON-Viewer-master.zip
+ create mode 100644 New Text Document.txt
+ create mode 100644 SimpleTAI
+ create mode 100644 bpm_help
+ create mode 100644 bpm_spark_js.js
+ create mode 100644 business-application-service (2).zip
+ create mode 100644 business-application-service-gradle.zip
+ create mode 100644 business-application-service715.zip
+ create mode 100644 chattest.txt
+ create mode 100644 mongo-db-demo.zip
+ create mode 100644 myTAIImpl
+ create mode 100644 script_create_715.sql
+ create mode 100644 sg248210.epub
+ create mode 100644 single_jar_file_instructions.txt
+ create mode 100644 straight_photo.jpg
+ create mode 100644 way_arounfd_deploy.txt
+PS C:\tmp\git-practice\configfiles> git push
+fatal: The current branch new-branch-test2 has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin new-branch-test2
+
+To have this happen automatically for branches without a tracking
+upstream, see 'push.autoSetupRemote' in 'git help config'.
+
+PS C:\tmp\git-practice\configfiles> git push --set-upstream origin new-branch-test2
+Enumerating objects: 26, done.
+Counting objects: 100% (26/26), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (24/24), done.
+Writing objects: 100% (26/26), 58.05 MiB | 10.76 MiB/s, done.
+Total 26 (delta 2), reused 23 (delta 2), pack-reused 0
+remote: Resolving deltas: 100% (2/2), done.
+remote:
+remote: Create a pull request for 'new-branch-test2' on GitHub by visiting:
+remote:      https://github.com/prafuls21/configfiles/pull/new/new-branch-test2
+remote:
+To https://github.com/prafuls21/configfiles
+ * [new branch]      new-branch-test2 -> new-branch-test2
+branch 'new-branch-test2' set up to track 'origin/new-branch-test2'.
+PS C:\tmp\git-practice\configfiles> git log
+commit 94236d83b9513329f1c1152246cd34cdc2ae0d43 (HEAD -> new-branch-test2, origin/new-branch-test2)
+Author: prafuls21 <praful_s21@yahoo.co.in>
+Date:   Sun May 25 00:22:40 2025 -0400
+
+    tesrt
+PS C:\tmp\git-practice\configfiles>
