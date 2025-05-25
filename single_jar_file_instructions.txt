@@ -156,6 +156,8 @@ The following example adds two version of the Evaluation artifact:
       </plugin>
     <plugins>
   <build>
+
+Update password : tets123
 To build the self-contained Spring Boot image, enter the following command in the <BUSINESS-APPLICATION>/<BUSINESS-APPLICATION>-service directory:
 
 mvn install
